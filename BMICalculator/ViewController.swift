@@ -9,6 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet var nicknameTextField: UITextField!
+    @IBOutlet var nicknameLabel: UILabel!
     @IBOutlet var image: UIImageView!
     @IBOutlet var buttons: [UIButton]!
     @IBOutlet var textFields: [UITextField]!
@@ -49,6 +51,18 @@ class ViewController: UIViewController {
         buttons[1].titleLabel?.font = .systemFont(ofSize: 25)
         buttons[1].backgroundColor = .purple
         buttons[1].layer.cornerRadius = 15
+        
+        nicknameLabel.text = "닉네임을 입력해주세요."
+        nicknameLabel.font = .systemFont(ofSize: 13)
+        
+        //데이터저장 출력
+        nicknameTextField.text =  UserDefaults.standard.string(forKey: "nickname")
+        height =  Double(UserDefaults.standard.string(forKey: "meter")!) ?? 0.0
+        weight =  Double(UserDefaults.standard.string(forKey: "kg")!) ?? 0.0
+        textFields[0].text = String(height)
+        textFields[1].text = String(weight)
+        
+        buttons[2].setTitle("닉네임 재설정", for: .normal)
     }
     func alert(_ string: String) {
         let alert = UIAlertController(title: string, message: nil, preferredStyle: .alert)
@@ -71,8 +85,10 @@ class ViewController: UIViewController {
         if num != nil {
             if sender.tag == 0 {
                 height = num!
+                UserDefaults.standard.set(height, forKey: "meter")
             } else {
                 weight = num!
+                UserDefaults.standard.set(weight, forKey: "kg")
             }
         }
         else {
@@ -83,6 +99,7 @@ class ViewController: UIViewController {
             }
         }
     }
+    //해결했고! 리셋기능조지자!
     @IBAction func resultButton(_ sender: UIButton) {
         if height > 300 || height < 100 {
             alert("정상적인 키를 입력해주세요")
@@ -91,7 +108,17 @@ class ViewController: UIViewController {
         } else {
             let bmi = weight / (height*height*0.0001)
             alert("BMI: "+String(format: "%.2f", bmi))
+            UserDefaults.standard.set(nicknameTextField.text, forKey: "nickname")
+            UserDefaults.standard.set(height, forKey: "meter")
+            UserDefaults.standard.set(weight, forKey: "kg")
         }
+    }
+ 
+    @IBAction func enterTextField(_ sender: UITextField) {
+    }
+    @IBAction func resetButtonPressed(_ sender: UIButton) {
+        nicknameTextField.text = nil
+        UserDefaults.standard.set(nicknameTextField.text, forKey: "nickname")
     }
 }
 
